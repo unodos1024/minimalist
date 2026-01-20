@@ -54,6 +54,7 @@
             line-height: 1.6;
             overflow: hidden;
             height: 100vh;
+            height: 100dvh;
             width: 100vw;
             transition: var(--transition);
             display: flex;
@@ -208,34 +209,54 @@
 
         .back-btn {
             position: absolute;
-            top: calc(50px + env(safe-area-inset-top));
-            left: 30px;
-            font-size: 0.7rem;
+            top: calc(20px + env(safe-area-inset-top));
+            left: 25px;
+            font-size: 0.75rem;
             color: var(--text-muted);
             cursor: pointer;
             font-family: var(--font-sans);
-            letter-spacing: 0.2em;
+            letter-spacing: 0.1em;
             text-transform: uppercase;
-            z-index: 1000;
+            z-index: 2000;
             transition: 0.3s;
+            padding: 10px;
+            display: none;
+            align-items: center;
         }
 
-        .back-btn:hover {
-            color: var(--text-color);
+        .back-btn:active {
+            opacity: 0.5;
         }
 
         .theme-toggle {
             position: absolute;
-            top: calc(50px + env(safe-area-inset-top));
-            right: 30px;
+            top: calc(20px + env(safe-area-inset-top));
+            right: 25px;
             font-size: 0.7rem;
             color: var(--text-muted);
             cursor: pointer;
             font-family: var(--font-sans);
             letter-spacing: 0.1em;
             text-transform: uppercase;
-            z-index: 1000;
+            z-index: 2000;
             transition: 0.3s;
+            padding: 10px;
+        }
+
+        .lang-selector {
+            position: absolute;
+            top: calc(20px + env(safe-area-inset-top));
+            left: 25px;
+            font-size: 0.65rem;
+            color: var(--text-dim);
+            font-family: var(--font-sans);
+            letter-spacing: 0.1em;
+            display: flex;
+            gap: 12px;
+            cursor: pointer;
+            z-index: 2000;
+            transition: 0.3s;
+            padding: 10px;
         }
 
         .ambient-selector {
@@ -439,6 +460,8 @@
             <span class="lang-item" onclick="applyLanguage('ja')">JA</span>
         </div>
 
+        <div class="back-btn" id="global-back-btn" onclick="goToScreen('home')" data-i18n="nav_close">← 닫기</div>
+
         <div id="screen-splash" class="screen active" onclick="goToScreen('home')">
             <div class="splash-title"
                 style="font-size: 3rem; letter-spacing: 0.6em; text-indent: 0.6em; text-transform: uppercase; font-weight: 100;"
@@ -470,7 +493,6 @@
         </div>
 
         <div id="screen-question" class="screen">
-            <div class="back-btn" onclick="goToScreen('home')" data-i18n="nav_close">← 닫기</div>
             <div class="small-label" data-i18n="label_reflection">성찰의 시간</div>
             <div id="q-text" class="question-text"></div>
             <input type="text" id="q-input" class="input-line" data-i18n-placeholder="input_placeholder"
@@ -481,7 +503,6 @@
         </div>
 
         <div id="screen-timer" class="screen">
-            <div class="back-btn" onclick="goToScreen('home')" data-i18n="nav_close">← 닫기</div>
             <div id="timer-ritual" style="width: 100%; display: flex; flex-direction: column; align-items: center;">
                 <div class="small-label" data-i18n="label_timer" style="margin-bottom: 40px;">비우는 시간</div>
                 <div class="timer-display" id="timer-val" style="margin: 0 0 20px 0;">10:00</div>
@@ -508,7 +529,6 @@
         </div>
 
         <div id="screen-pause" class="screen">
-            <div class="back-btn" onclick="goToScreen('home')" data-i18n="nav_close">← 닫기</div>
             <div id="pause-content" style="width:100%;">
                 <div class="small-label" data-i18n="label_pause">의도적 멈춤</div>
                 <input type="text" id="p-input" class="input-line" data-i18n-placeholder="pause_placeholder"
@@ -527,7 +547,6 @@
         </div>
 
         <div id="screen-archive" class="screen">
-            <div class="back-btn" onclick="goToScreen('home')" data-i18n="nav_close">← 닫기</div>
             <div class="small-label" data-i18n="home_archive">기록 보관소</div>
             <div id="weight-stat"
                 style="font-size: 0.8rem; color: var(--text-dim); margin-bottom: 40px; font-family: var(--font-sans); letter-spacing: 0.1em;">
@@ -648,13 +667,17 @@
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById('screen-' + id).classList.add('active');
 
-            // Show/Hide theme/lang toggles based on screen
+            // Show/Hide global header elements
             const themeBtn = document.getElementById('theme-btn');
             const langBtn = document.getElementById('lang-btn');
+            const backBtn = document.getElementById('global-back-btn');
+
             const isHome = (id === 'home');
+            const isSplash = (id === 'splash');
 
             if (themeBtn) themeBtn.style.display = isHome ? 'block' : 'none';
             if (langBtn) langBtn.style.display = isHome ? 'flex' : 'none';
+            if (backBtn) backBtn.style.display = (!isHome && !isSplash) ? 'flex' : 'none';
 
             if (id === 'home') refreshWisdom();
             if (id === 'archive') loadArchive();
