@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>심플하게 산다 (L'Art de la Simplicité)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200;400;700&family=Outfit:wght@100;300;400;600&display=swap"
+        rel="stylesheet">
+    <meta name="theme-color" content="#FFFFFF">
+    <style>
+        :root {
+            --bg-color: #FFFFFF;
+            --text-color: #1A1A1A;
+            --text-muted: #888888;
+            --text-dim: #BBBBBB;
+            --border-color: #F0F0F0;
+            --input-border: #CCCCCC;
+            --accent-color: #999;
+            --font-serif: 'Noto Serif KR', serif;
+            --font-sans: 'Outfit', sans-serif;
+            --transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            --app-bg: radial-gradient(circle at center, #ffffff 0%, #fafafa 100%);
+        }
+
+        body.dark-mode {
+            --bg-color: #000000;
+            --text-color: #FFFFFF;
+            --text-muted: #888888;
+            --text-dim: #444444;
+            --border-color: #222222;
+            --input-border: #444444;
+            --accent-color: #555;
+            --app-bg: #000000;
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            font-family: var(--font-serif);
+            color: var(--text-color);
+            line-height: 1.6;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+            transition: var(--transition);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .app-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            max-width: 500px;
+            /* Desktop constraint */
+            overflow: hidden;
+            background: var(--app-bg);
+            box-shadow: 0 0 100px rgba(0, 0, 0, 0.02);
+        }
+
+        @media (min-width: 768px) {
+            body {
+                background-color: #F5F5F3;
+            }
+
+            .app-container {
+                height: 85vh;
+                border-radius: 40px;
+                border: 1px solid rgba(0, 0, 0, 0.05);
+            }
+        }
+
+        .screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: calc(60px + env(safe-area-inset-top)) 30px calc(40px + env(safe-area-inset-bottom));
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: var(--app-bg);
+            transition: background 1.5s ease, opacity 0.5s ease;
+            animation: fadeIn 0.8s ease-out;
+            overflow-y: auto;
+        }
+
+        .screen.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .btn-link {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-family: var(--font-serif);
+            font-size: 1.3rem;
+            margin: 20px 0;
+            padding: 10px 0;
+            cursor: pointer;
+            text-decoration: none;
+            position: relative;
+            transition: var(--transition);
+            font-weight: 200;
+        }
+
+        .btn-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 1px;
+            background-color: var(--text-color);
+            transition: var(--transition);
+            transform: translateX(-50%);
+        }
+
+        .btn-link:hover::after {
+            width: 100%;
+        }
+
+        .btn-link:active {
+            opacity: 0.6;
+            transform: scale(0.98);
+        }
+
+        .timer-display {
+            font-size: 5rem;
+            font-weight: 100;
+            margin: 40px 0;
+            font-family: var(--font-sans);
+            letter-spacing: -0.05em;
+        }
+
+        .question-text {
+            font-style: italic;
+            font-size: 1.6rem;
+            line-height: 1.5;
+            margin-bottom: 60px;
+            font-weight: 200;
+            min-height: 3.5em;
+        }
+
+        .input-line {
+            width: 100%;
+            border: none;
+            border-bottom: 1.5px solid var(--input-border);
+            background: transparent;
+            padding: 15px 0;
+            font-family: var(--font-serif);
+            font-size: 1.3rem;
+            outline: none;
+            text-align: center;
+            color: var(--text-color);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .input-line::placeholder {
+            color: var(--text-dim);
+            opacity: 0.4;
+        }
+
+        .input-line:focus {
+            border-bottom-color: var(--text-color);
+            letter-spacing: 0.05em;
+        }
+
+        .small-label {
+            font-family: var(--font-sans);
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.4em;
+            margin-bottom: 30px;
+            font-weight: 400;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: calc(50px + env(safe-area-inset-top));
+            left: 30px;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-family: var(--font-sans);
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            z-index: 1000;
+            transition: 0.3s;
+        }
+
+        .back-btn:hover {
+            color: var(--text-color);
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: calc(50px + env(safe-area-inset-top));
+            right: 30px;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-family: var(--font-sans);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            z-index: 1000;
+            transition: 0.3s;
+        }
+
+        .ambient-selector {
+            display: flex;
+            gap: 25px;
+            margin-top: 40px;
+        }
+
+        .ambient-btn {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            cursor: pointer;
+            border-bottom: 1px solid transparent;
+            transition: 0.3s;
+            font-family: var(--font-sans);
+            letter-spacing: 0.1em;
+        }
+
+        .ambient-btn.active {
+            color: var(--text-color);
+            border-bottom-color: var(--text-color);
+        }
+
+        .archive-list {
+            width: 100%;
+            text-align: left;
+            flex: 1;
+            overflow-y: auto;
+            mask-image: linear-gradient(to bottom, transparent, black 10%, black 90%, transparent);
+            -webkit-mask-image: linear-gradient(to bottom, transparent, black 10%, black 90%, transparent);
+        }
+
+        .archive-list::-webkit-scrollbar {
+            display: none;
+        }
+
+        .archive-item {
+            padding: 25px 0;
+            border-bottom: 1px solid var(--border-color);
+            position: relative;
+        }
+
+        .archive-item .date {
+            font-family: var(--font-sans);
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .archive-item .content {
+            font-size: 1.1rem;
+            color: var(--text-color);
+            margin-top: 10px;
+            font-weight: 300;
+        }
+
+        .delete-btn {
+            position: absolute;
+            top: 25px;
+            right: 0;
+            font-size: 1rem;
+            color: var(--text-dim);
+            cursor: pointer;
+            padding: 5px;
+            transition: 0.3s;
+        }
+
+        .delete-btn:hover {
+            color: var(--text-color);
+        }
+
+        #toast {
+            position: fixed;
+            bottom: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1A1A1A;
+            color: #FFF;
+            padding: 14px 28px;
+            border-radius: 40px;
+            font-family: var(--font-sans);
+            font-size: 0.85rem;
+            opacity: 0;
+            transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+            z-index: 2000;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Ambient Grain */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            background-image: url("https://www.transparenttextures.com/patterns/p6.png");
+            opacity: 0.04;
+            z-index: 500;
+        }
+
+        body.dark-mode::after {
+            opacity: 0.08;
+            filter: invert(1);
+        }
+
+        .lang-selector {
+            position: relative;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            font-family: var(--font-sans);
+            letter-spacing: 0.2em;
+            display: flex;
+            gap: 15px;
+            cursor: pointer;
+            z-index: 1000;
+        }
+
+        .lang-item.active {
+            color: var(--text-color);
+            font-weight: 600;
+        }
+
+        #deep-fade-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-color);
+            z-index: 5000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .home-widget {
+            margin-top: 60px;
+            padding: 25px;
+            border-top: 1px solid var(--border-color);
+            width: 85%;
+            text-align: left;
+            opacity: 0.5;
+            transition: opacity 0.5s;
+        }
+
+        .home-widget:hover {
+            opacity: 1;
+        }
+
+        .widget-label {
+            font-family: var(--font-sans);
+            font-size: 0.6rem;
+            letter-spacing: 0.4em;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            text-transform: uppercase;
+        }
+
+        .widget-content {
+            font-size: 0.8rem;
+            color: var(--text-color);
+            font-weight: 300;
+            letter-spacing: 0.05em;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app-container">
+        <div class="theme-toggle" onclick="toggleTheme()" data-i18n="toggle_mode">자정 모드</div>
+
+        <div id="screen-splash" class="screen active" onclick="goToScreen('home')">
+            <div style="font-size: 3rem; letter-spacing: 0.6em; text-transform: uppercase; font-weight: 100;"
+                data-i18n="title">단순함</div>
+            <div style="position: absolute; bottom: 80px; font-size: 0.7rem; color: var(--text-dim); letter-spacing: 0.4em;"
+                data-i18n="splash_start">시작하려면 터치하세요</div>
+        </div>
+
+        <div id="screen-home" class="screen">
+            <div style="display: flex; flex-direction: column; gap: 15px; margin-bottom: 60px;">
+                <button class="btn-link" onclick="goToScreen('question')" data-i18n="home_question">오늘의 질문</button>
+                <button class="btn-link" onclick="goToScreen('timer')" data-i18n="home_timer">공간 비우기</button>
+                <button class="btn-link" onclick="goToScreen('pause')" data-i18n="home_pause">의도적 멈춤</button>
+                <button class="btn-link" onclick="goToScreen('archive')"
+                    style="margin-top: 30px; font-size: 0.85rem; color: var(--text-muted);" data-i18n="home_archive">기록
+                    보관소</button>
+            </div>
+            <div id="wisdom-quote"
+                style="font-size: 0.95rem; color: var(--text-muted); font-style: italic; line-height: 2; max-width: 280px; font-weight: 200;">
+            </div>
+
+            <div class="home-widget">
+                <div class="widget-label" data-i18n="home_archive">Archive</div>
+                <div class="widget-content" id="widget-stat-summary">0.0 KG RELEASED</div>
+            </div>
+
+            <div class="lang-selector">
+                <span class="lang-item" onclick="applyLanguage('ko')">KO</span>
+                <span class="lang-item" onclick="applyLanguage('en')">EN</span>
+                <span class="lang-item" onclick="applyLanguage('fr')">FR</span>
+                <span class="lang-item" onclick="applyLanguage('es')">ES</span>
+                <span class="lang-item" onclick="applyLanguage('ja')">JA</span>
+            </div>
+        </div>
+
+        <div id="screen-question" class="screen">
+            <div class="back-btn" onclick="goToScreen('home')" data-i18n="nav_close">← 닫기</div>
+            <div class="small-label" data-i18n="label_reflection">성찰의 시간</div>
+            <div id="q-text" class="question-text"></div>
+            <input type="text" id="q-input" class="input-line" data-i18n-placeholder="input_placeholder"
+                placeholder="마음의 답을 입력하세요" onkeypress="handleQuestion(event)">
+            <div onclick="refreshQuestion()"
+                style="margin-top: 40px; font-size: 0.75rem; color: var(--text-dim); cursor: pointer; letter-spacing: 0.1em;"
+                data-i18n="next_question">다른 질문 보기</div>
+        </div>
+
+        <div id="screen-timer" class="screen">
+            <div class="back-btn" onclick="goToScreen('home')" data-i18n="nav_close">← 닫기</div>
+            <div id="timer-ritual" style="width: 100%; display: flex; flex-direction: column; align-items: center;">
+                <div class="small-label" data-i18n="label_timer" style="margin-bottom: 40px;">비우는 시간</div>
+                <div class="timer-display" id="timer-val" style="margin: 0 0 20px 0;">10:00</div>
+                <div id="timer-prompt" data-i18n="timer_prompt"
+                    style="font-size:0.9rem; font-style:italic; font-weight:200; color:var(--text-muted); min-height:1.5em;">
+                    시작 버튼을 눌러 비움을 준비하세요.</div>
+                <button class="btn-link" id="timer-btn" onclick="toggleTimer()" data-i18n="timer_start"
+                    style="margin: 40px 0; font-size: 1.6rem;">시작하기</button>
+                <div class="ambient-selector">
+                    <div class="ambient-btn active" onclick="setAmbient('none', this)" data-i18n="ambient_none">침묵</div>
+                    <div class="ambient-btn" onclick="setAmbient('wind', this)" data-i18n="ambient_wind">바람</div>
+                    <div class="ambient-btn" onclick="setAmbient('rain', this)" data-i18n="ambient_rain">빗소리</div>
+                </div>
+            </div>
+            <div id="timer-success" style="display: none; flex-direction: column; align-items: center; width:100%;">
+                <div class="small-label" data-i18n="label_success">비움 완료</div>
+                <div style="font-size: 1.4rem; margin: 40px 0; font-weight: 200;" data-i18n="timer_done">공간이 한결 가벼워졌습니다.
+                </div>
+                <input type="text" id="t-input" class="input-line" data-i18n-placeholder="timer_placeholder"
+                    placeholder="무엇을 비웠나요?">
+                <button class="btn-link" onclick="finishTimerRitual()" style="margin-top:40px;"
+                    data-i18n="save_archive">기록 보관소에 저장</button>
+            </div>
+        </div>
+
+        <div id="screen-pause" class="screen">
+            <div class="back-btn" onclick="goToScreen('home')" data-i18n="nav_close">← 닫기</div>
+            <div id="pause-content" style="width:100%;">
+                <div class="small-label" data-i18n="label_pause">의도적 멈춤</div>
+                <input type="text" id="p-input" class="input-line" data-i18n-placeholder="pause_placeholder"
+                    placeholder="무엇을 사고 싶나요?">
+                <button class="btn-link" onclick="savePurchase()" style="margin-top:50px;" data-i18n="pause_start">24시간
+                    유예하기</button>
+            </div>
+            <div id="pause-success" style="display: none; flex-direction: column; align-items: center;">
+                <div style="font-size: 1.4rem; color: var(--text-muted); margin-bottom: 30px; font-weight: 200;"
+                    data-i18n="inner_calm">내면의 고요</div>
+                <div style="font-size: 1rem; color: var(--text-dim); line-height: 2;" data-i18n="pause_done">충동이 가라앉을
+                    때까지<br>24시간의 유예 시간을 가집니다.</div>
+                <button class="btn-link" onclick="goToScreen('home')" style="margin-top: 60px; font-size: 0.9rem;"
+                    data-i18n="back_home">홈으로 돌아가기</button>
+            </div>
+        </div>
+
+        <div id="screen-archive" class="screen">
+            <div class="back-btn" onclick="goToScreen('home')" data-i18n="nav_close">← 닫기</div>
+            <div class="small-label" data-i18n="home_archive">기록 보관소</div>
+            <div id="weight-stat"
+                style="font-size: 0.8rem; color: var(--text-dim); margin-bottom: 40px; font-family: var(--font-sans); letter-spacing: 0.1em;">
+            </div>
+            <div class="archive-list" id="archive-content"></div>
+        </div>
+
+        <div id="toast">기록되었습니다</div>
+        <div id="deep-fade-overlay"></div>
+    </div>
+
+    <script>
+        const translations = {
+            ko: {
+                title: "단순함", splash_start: "시작하려면 터치하세요", home_question: "오늘의 질문", home_timer: "공간 비우기", home_pause: "의도적 멈춤", home_archive: "기록 보관소", nav_close: "← 닫기", toggle_mode: "자정 모드", noon_mode: "정오 모드", label_reflection: "성찰의 시간", input_placeholder: "마음의 답을 입력하세요", next_question: "다른 질문 보기", label_timer: "비우는 시간", timer_prompt: "시작 버튼을 눌러 비움을 준비하세요.", timer_running: "비움이 진행 중입니다. 호흡에 집중하세요.", timer_start: "시작하기", timer_pause: "일시 정지", ambient_none: "침묵", ambient_wind: "바람", ambient_rain: "빗소리", label_success: "비움 완료", timer_done: "공간이 한결 가벼워졌습니다.", timer_placeholder: "무엇을 비웠나요?", save_archive: "기록 보관소에 저장", label_pause: "의도적 멈춤", pause_placeholder: "무엇을 사고 싶나요?", pause_start: "24시간 유예하기", inner_calm: "내면의 고요", pause_done: "충동이 가라앉을 때까지<br>24시간의 유예 시간을 가집니다.", back_home: "홈으로 돌아가기", weight_prefix: "약 ", weight_suffix: " KG의 무게를 덜어냈습니다", toast_saved: "성찰이 보관되었습니다", empty_archive: "아직 보관된 기록이 없습니다.",
+                q: ["오늘 당신의 삶에서 가장 덜어내고 싶은 생각은?", "지금 당신을 복잡하게 만드는 물건 하나는?", "내일을 더 가볍게 살기 위해 무엇을 할 수 있을까요?", "꼭 남겨야 할 단 하나의 가치 있는 물건은?", "비어있는 공간이 주는 평온함을 느끼고 있나요?"],
+                wisdom: ["행복은 소유가 아니라 존재의 풍요로움이다.", "단순함은 궁극의 정교함이다.", "적게 소유할수록 비로소 선명해진다.", "비어있는 곳에 새로운 에너지가 깃든다.", "가진 물건이 당신을 소유하게 하지 마세요."]
+            },
+            en: {
+                title: "Simplicity", splash_start: "Touch to Begin", home_question: "Daily Question", home_timer: "Clear Space", home_pause: "Mindful Pause", home_archive: "Archive", nav_close: "← Close", toggle_mode: "Midnight Mode", noon_mode: "Noon Mode", label_reflection: "Reflection", input_placeholder: "Listen to your soul...", next_question: "Next Question", label_timer: "Emptying Time", timer_prompt: "Press start to prepare your space.", timer_running: "Clearing in progress. Focus on your breath.", timer_start: "Start Ritual", timer_pause: "Pause", ambient_none: "Silence", ambient_wind: "Wind", ambient_rain: "Rain", label_success: "Cleared", timer_done: "Your space feels lighter now.", timer_placeholder: "What did you release?", save_archive: "Save to Archive", label_pause: "Intentional Pause", pause_placeholder: "What do you desire?", pause_start: "Postpone for 24h", inner_calm: "Inner Calm", pause_done: "Let the desire fade away<br>during this 24-hour pause.", back_home: "Back Home", weight_prefix: "Released approx. ", weight_suffix: " KG", toast_saved: "Reflection Archived", empty_archive: "No records archived yet.",
+                q: ["What thought would you like to release today?", "Is there an object cluttering your mind?", "One small step towards a simpler tomorrow?", "If you could keep only one thing, what is it?", "Do you feel the peace of empty space?"],
+                wisdom: ["Happiness is not in having, but in being.", "Simplicity is the ultimate sophistication.", "The less you own, the more you have.", "Energy enters where there is space.", "Don't let your possessions own you."]
+            },
+            fr: {
+                title: "Simplicité", splash_start: "Toucher pour commencer", home_question: "Question du jour", home_timer: "Vider l'espace", home_pause: "Pause consciente", home_archive: "Archives", nav_close: "← Fermer", toggle_mode: "Mode Minuit", noon_mode: "Mode Midi", label_reflection: "Réflexion", input_placeholder: "Écoutez votre âme...", next_question: "Autre question", label_timer: "Temps de vide", timer_prompt: "Appuyez sur démarrer pour préparer l'espace.", timer_running: "Vide en cours. Concentrez-vous sur votre respiration.", timer_start: "Commencer", timer_pause: "Pause", ambient_none: "Silence", ambient_wind: "Vent", ambient_rain: "Pluie", label_success: "Libéré", timer_done: "Votre espace est plus léger.", timer_placeholder: "Qu'avez-vous vidé ?", save_archive: "Enregistrer", label_pause: "Pause intentionnelle", pause_placeholder: "Quel est votre désir ?", pause_start: "Reporter de 24h", inner_calm: "Calme intérieur", pause_done: "Laissez l'impulsion s'apaiser<br>pendant cette pause de 24h.", back_home: "Retour", weight_prefix: "Allégé d'environ ", weight_suffix: " KG", toast_saved: "Réflexion archivée", empty_archive: "Aucune archive pour le moment.",
+                q: ["Quelle pensée aimeriez-vous libérer ?", "Un objet qui encombre votre esprit ?", "Un petit pas pour un demain plus simple ?", "Si vous ne gardiez qu'une chose ?", "Ressentez-vous la paix du vide ?"],
+                wisdom: ["Le bonheur est dans l'être, pas l'avoir.", "La simplicité est la sophistication suprême.", "Moins on possède, plus on est riche.", "L'énergie entre là où il y a de la place.", "Ne laissez pas vos biens vous posséder."]
+            },
+            es: {
+                title: "Simplicidad", splash_start: "Toca para comenzar", home_question: "Pregunta diaria", home_timer: "Limpiar espacio", home_pause: "Pausa consciente", home_archive: "Archivo", nav_close: "← Cerrar", toggle_mode: "Modo Medianoche", noon_mode: "Modo Mediodía", label_reflection: "Reflexión", input_placeholder: "Escucha a tu alma...", next_question: "Siguiente pregunta", label_timer: "Tiempo de vacío", timer_prompt: "Pulsa inicio para preparar el espacio.", timer_running: "Vaciado en curso. Concéntrate en tu respiración.", timer_start: "Empezar", timer_pause: "Pausa", ambient_none: "Silencio", ambient_wind: "Viento", ambient_rain: "Lluvia", label_success: "Liberado", timer_done: "Tu espacio se siente más ligero.", timer_placeholder: "¿Qué has liberado?", save_archive: "Guardar en archivo", label_pause: "Pausa intencional", pause_placeholder: "¿Qué deseas comprar?", pause_start: "Posponer 24h", inner_calm: "Calma interior", pause_done: "Deja que el impulso se calme<br>during this 24-hour pause.", back_home: "Volver al inicio", weight_prefix: "Aproximadamente ", weight_suffix: " KG liberados", toast_saved: "Reflexión archivada", empty_archive: "Aún no hay registros.",
+                q: ["¿Qué pensamiento quieres liberar hoy?", "¿Un objeto que nubla tu mente?", "¿Un paso para un mañana más simple?", "Si solo pudieras quedarte con algo...", "¿Sientes la paz del espacio vacío?"],
+                wisdom: ["La felicidad está en el ser, no en tener.", "La simplicidad es la máxima sofisticación.", "Cuanto menos posees, más tienes.", "La energía entra donde hay espacio.", "No dejes que tus cosas te posean."]
+            },
+            ja: {
+                title: "単純", splash_start: "画面에触れてください", home_question: "今日の問い", home_timer: "空間を整える", home_pause: "意図的な休息", home_archive: "記録の保管庫", nav_close: "← 閉じる", toggle_mode: "夜更けモード", noon_mode: "真昼モード", label_reflection: "内省の時間", input_placeholder: "心の声を聴く...", next_question: "別の問い", label_timer: "手放す時間", timer_prompt: "開始ボタンを押して、手放す準備をしましょう。", timer_running: "手放しの時間です。呼吸に集中してください。", timer_start: "始める", timer_pause: "一時停止", ambient_none: "静寂", ambient_wind: "風", ambient_rain: "雨音", label_success: "完了", timer_done: "空間が軽やかになりました。", timer_placeholder: "何を手放しましたか？", save_archive: "保管庫に記録する", label_pause: "意図적인一時停止", pause_placeholder: "何が欲しいですか？", pause_start: "24시간待つ", inner_calm: "内なる静寂", pause_done: "24時間の休息を経て、<br>衝動が静まるのを待ちます。", back_home: "ホームへ戻る", weight_prefix: "約 ", weight_suffix: " KG 手放しました", toast_saved: "内省が記録されました", empty_archive: "まだ記録はありません。",
+                q: ["今日、手放したい思考は何ですか？", "心を乱す持ち物はありませんか？", "より単純な明日のための小さな一歩は？", "たった一つ残すとしたら何ですか？", "空白がもたらす平穏を感じますか？"],
+                wisdom: ["幸福は所有ではなく存在にある。", "単純さは究極の洗練である。", "少なく持つほど、多くを得る。", "余白にこそ新しい気が流れる。", "物に所有されてはいけません. "]
+            }
+        };
+
+        const state = {
+            lang: localStorage.getItem('minimalist_lang') || (translations[navigator.language.split('-')[0]] ? navigator.language.split('-')[0] : 'en'),
+            archive: JSON.parse(localStorage.getItem('minimalist_archive') || '[]'),
+            timer: { interval: null, seconds: 600, isRunning: false, ambient: 'none' },
+            audio: { context: null, ambientSource: null }
+        };
+
+        function applyLanguage(l) {
+            state.lang = l;
+            localStorage.setItem('minimalist_lang', l);
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[l][key]) el.innerHTML = translations[l][key];
+            });
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                const key = el.getAttribute('data-i18n-placeholder');
+                if (translations[l][key]) el.placeholder = translations[l][key];
+            });
+            document.querySelectorAll('.lang-item').forEach(item => {
+                item.classList.toggle('active', item.textContent.toLowerCase() === l);
+            });
+            triggerHaptic(10); refreshWisdom(); updateLightness(); updateThemeToggleButton();
+        }
+
+        function triggerHaptic(duration = 20) {
+            if (window.AndroidInterface && window.AndroidInterface.vibrate) window.AndroidInterface.vibrate(duration);
+            else if (navigator.vibrate) navigator.vibrate(duration);
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+
+            if (window.AndroidInterface && window.AndroidInterface.setSystemBarsTheme) {
+                window.AndroidInterface.setSystemBarsTheme(isDark);
+            }
+            document.querySelector('meta[name="theme-color"]').setAttribute('content', isDark ? '#000000' : '#FFFFFF');
+
+            updateThemeToggleButton();
+            triggerHaptic(30);
+            updateLightness();
+        }
+
+        function updateThemeToggleButton() {
+            const isDark = document.body.classList.contains('dark-mode');
+            const t = translations[state.lang];
+            const btn = document.querySelector('.theme-toggle');
+            if (btn) btn.textContent = isDark ? t.noon_mode : t.toggle_mode;
+        }
+
+        function updateLightness() {
+            const count = state.archive.length;
+            const weightValue = (count * 0.15).toFixed(1);
+            const t = translations[state.lang];
+            const weightEl = document.getElementById('weight-stat');
+            const widgetWeightEl = document.getElementById('widget-stat-summary');
+            if (weightEl) weightEl.textContent = `${t.weight_prefix}${weightValue}${t.weight_suffix}`;
+            if (widgetWeightEl) widgetWeightEl.textContent = `${weightValue}${t.weight_suffix}`.toUpperCase();
+
+            const screens = document.querySelectorAll('.screen');
+            if (document.body.classList.contains('dark-mode')) {
+                screens.forEach(s => s.style.background = '');
+                return;
+            }
+
+            const lightness = Math.min(count * 0.8, 15);
+            screens.forEach(s => {
+                s.style.background = `radial-gradient(circle at center, #ffffff 0%, #fafafa ${100 - lightness}%)`;
+            });
+        }
+
+        function goToScreen(id) {
+            triggerHaptic(15);
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById('screen-' + id).classList.add('active');
+            if (id === 'home') refreshWisdom();
+            if (id === 'archive') loadArchive();
+            if (id === 'question') refreshQuestion();
+        }
+
+        function refreshWisdom() {
+            const el = document.getElementById('wisdom-quote');
+            const list = translations[state.lang].wisdom;
+            if (el) el.textContent = `"${list[Math.floor(Math.random() * list.length)]}"`;
+        }
+
+        function refreshQuestion() {
+            const el = document.getElementById('q-text');
+            const list = translations[state.lang].q;
+            if (el) el.textContent = `"${list[Math.floor(Math.random() * list.length)]}"`;
+        }
+
+        function handleQuestion(e) {
+            if (e.key === 'Enter') {
+                const val = e.target.value.trim();
+                const question = document.getElementById('q-text').textContent;
+                if (val) {
+                    saveToArchive('Reflection', val, question);
+                    e.target.value = '';
+                    const overlay = document.getElementById('deep-fade-overlay');
+                    overlay.style.opacity = '1';
+                    setTimeout(() => {
+                        showToast(translations[state.lang].toast_saved);
+                        goToScreen('home');
+                        setTimeout(() => { overlay.style.opacity = '0'; }, 600);
+                    }, 2000);
+                }
+            }
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            if (toast) {
+                toast.textContent = msg;
+                toast.style.opacity = '1';
+                setTimeout(() => { toast.style.opacity = '0'; }, 3000);
+            }
+        }
+
+        function toggleTimer() {
+            triggerHaptic(25);
+            const btn = document.getElementById('timer-btn');
+            const prompt = document.getElementById('timer-prompt');
+            const t = translations[state.lang];
+            if (state.timer.isRunning) {
+                clearInterval(state.timer.interval);
+                state.timer.isRunning = false;
+                btn.textContent = t.timer_start;
+                prompt.textContent = t.timer_prompt;
+                stopAmbient();
+            } else {
+                state.timer.isRunning = true;
+                btn.textContent = t.timer_pause;
+                prompt.textContent = t.timer_running || "Focus on your breath.";
+                startAmbient();
+                state.timer.interval = setInterval(() => {
+                    state.timer.seconds--;
+                    updateTimerUI();
+                    if (state.timer.seconds <= 0) {
+                        clearInterval(state.timer.interval);
+                        stopAmbient();
+                        document.getElementById('timer-ritual').style.display = 'none';
+                        document.getElementById('timer-success').style.display = 'flex';
+                    }
+                }, 1000);
+            }
+        }
+
+        function updateTimerUI() {
+            const m = Math.floor(state.timer.seconds / 60);
+            const s = state.timer.seconds % 60;
+            document.getElementById('timer-val').textContent = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+        }
+
+        function finishTimerRitual() {
+            const val = document.getElementById('t-input').value.trim() || 'Declutter';
+            saveToArchive('Clearance', val);
+            goToScreen('home');
+            document.getElementById('timer-ritual').style.display = 'flex';
+            document.getElementById('timer-success').style.display = 'none';
+            state.timer.seconds = 600;
+            updateTimerUI();
+        }
+
+        function savePurchase() {
+            const val = document.getElementById('p-input').value.trim();
+            if (val) {
+                triggerHaptic(50);
+                saveToArchive('Pause', val);
+                document.getElementById('pause-content').style.display = 'none';
+                document.getElementById('pause-success').style.display = 'flex';
+            }
+        }
+
+        function saveToArchive(type, content, question = null) {
+            const date = new Date().toLocaleDateString(state.lang === 'ko' ? 'ko-KR' : 'en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+            state.archive.unshift({ type, content, question, date });
+            localStorage.setItem('minimalist_archive', JSON.stringify(state.archive));
+            updateLightness();
+        }
+
+        function loadArchive() {
+            const cont = document.getElementById('archive-content');
+            updateLightness();
+            if (state.archive.length === 0) {
+                cont.innerHTML = `<div style="margin-top:100px;color:var(--text-dim);font-weight:200;">${translations[state.lang].empty_archive}</div>`;
+                return;
+            }
+            cont.innerHTML = state.archive.map((item, idx) => `
+                <div class="archive-item">
+                    <div class="delete-btn" onclick="deleteFromArchive(${idx})">×</div>
+                    <div class="date">${item.date} · ${item.type}</div>
+                    ${item.question ? `<div style="font-size:0.8rem; color:var(--text-muted); font-style:italic; margin-top:8px;">Q: ${item.question}</div>` : ''}
+                    <div class="content">${item.content}</div>
+                </div>`).join('');
+        }
+
+        function deleteFromArchive(idx) {
+            state.archive.splice(idx, 1);
+            localStorage.setItem('minimalist_archive', JSON.stringify(state.archive));
+            loadArchive();
+            triggerHaptic(30);
+        }
+
+        async function initAudio() { if (!state.audio.context) state.audio.context = new (window.AudioContext || window.webkitAudioContext)(); }
+
+        function setAmbient(t, el) {
+            state.timer.ambient = t;
+            if (el) {
+                document.querySelectorAll('.ambient-btn').forEach(b => b.classList.remove('active'));
+                el.classList.add('active');
+            }
+            triggerHaptic(10);
+            if (state.timer.isRunning) startAmbient();
+        }
+
+        function startAmbient() {
+            stopAmbient(); if (state.timer.ambient === 'none') return;
+            initAudio(); const ctx = state.audio.context;
+            const node = ctx.createBufferSource();
+            const buffer = ctx.createBuffer(1, ctx.sampleRate * 2, ctx.sampleRate);
+            const data = buffer.getChannelData(0);
+            for (let i = 0; i < data.length; i++) data[i] = Math.random() * 2 - 1;
+            node.buffer = buffer; node.loop = true;
+            const filter = ctx.createBiquadFilter();
+            filter.type = state.timer.ambient === 'wind' ? 'lowpass' : 'highpass';
+            filter.frequency.value = state.timer.ambient === 'wind' ? 400 : 1000;
+            const gain = ctx.createGain(); gain.gain.value = 0.04;
+            node.connect(filter); filter.connect(gain); gain.connect(ctx.destination);
+            node.start(); state.audio.ambientSource = node;
+        }
+
+        function stopAmbient() { if (state.audio.ambientSource) { state.audio.ambientSource.stop(); state.audio.ambientSource = null; } }
+
+        window.onload = () => {
+            applyLanguage(state.lang);
+            const isDark = document.body.classList.contains('dark-mode');
+            if (window.AndroidInterface && window.AndroidInterface.setSystemBarsTheme) {
+                window.AndroidInterface.setSystemBarsTheme(isDark);
+            }
+        };
+    </script>
+</body>
+
+</html>
