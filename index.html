@@ -467,79 +467,76 @@
                     </div>
                 </div>
             </div>
-
         </div>
-    </div>
-    </div>
 
-    <div id="screen-question" class="screen">
-        <div class="back-btn" onclick="goToScreen('home')" data-i18n="nav_close">← 닫기</div>
-        <div class="small-label" data-i18n="label_reflection">성찰의 시간</div>
-        <div id="q-text" class="question-text"></div>
-        <input type="text" id="q-input" class="input-line" data-i18n-placeholder="input_placeholder"
-            placeholder="마음의 답을 입력하세요" onkeypress="handleQuestion(event)">
-        <div onclick="refreshQuestion()"
-            style="margin-top: 40px; font-size: 0.75rem; color: var(--text-dim); cursor: pointer; letter-spacing: 0.1em;"
-            data-i18n="next_question">다른 질문 보기</div>
-    </div>
+        <div id="screen-question" class="screen">
+            <div class="back-btn" onclick="goToScreen('home')" data-i18n="nav_close">← 닫기</div>
+            <div class="small-label" data-i18n="label_reflection">성찰의 시간</div>
+            <div id="q-text" class="question-text"></div>
+            <input type="text" id="q-input" class="input-line" data-i18n-placeholder="input_placeholder"
+                placeholder="마음의 답을 입력하세요" onkeypress="handleQuestion(event)">
+            <div onclick="refreshQuestion()"
+                style="margin-top: 40px; font-size: 0.75rem; color: var(--text-dim); cursor: pointer; letter-spacing: 0.1em;"
+                data-i18n="next_question">다른 질문 보기</div>
+        </div>
 
-    <div id="screen-timer" class="screen">
-        <div class="back-btn" onclick="goToScreen('home')" data-i18n="nav_close">← 닫기</div>
-        <div id="timer-ritual" style="width: 100%; display: flex; flex-direction: column; align-items: center;">
-            <div class="small-label" data-i18n="label_timer" style="margin-bottom: 40px;">비우는 시간</div>
-            <div class="timer-display" id="timer-val" style="margin: 0 0 20px 0;">10:00</div>
-            <div id="timer-prompt" data-i18n="timer_prompt"
-                style="font-size:0.9rem; font-style:italic; font-weight:200; color:var(--text-muted); min-height:1.5em;">
-                시작 버튼을 눌러 비움을 준비하세요.</div>
-            <button class="btn-link" id="timer-btn" onclick="toggleTimer()" data-i18n="timer_start"
-                style="margin: 40px 0; font-size: 1.6rem;">시작하기</button>
-            <div class="ambient-selector">
-                <div class="ambient-btn active" onclick="setAmbient('none', this)" data-i18n="ambient_none">침묵</div>
-                <div class="ambient-btn" onclick="setAmbient('wind', this)" data-i18n="ambient_wind">바람</div>
-                <div class="ambient-btn" onclick="setAmbient('rain', this)" data-i18n="ambient_rain">빗소리</div>
+        <div id="screen-timer" class="screen">
+            <div class="back-btn" onclick="goToScreen('home')" data-i18n="nav_close">← 닫기</div>
+            <div id="timer-ritual" style="width: 100%; display: flex; flex-direction: column; align-items: center;">
+                <div class="small-label" data-i18n="label_timer" style="margin-bottom: 40px;">비우는 시간</div>
+                <div class="timer-display" id="timer-val" style="margin: 0 0 20px 0;">10:00</div>
+                <div id="timer-prompt" data-i18n="timer_prompt"
+                    style="font-size:0.9rem; font-style:italic; font-weight:200; color:var(--text-muted); min-height:1.5em;">
+                    시작 버튼을 눌러 비움을 준비하세요.</div>
+                <button class="btn-link" id="timer-btn" onclick="toggleTimer()" data-i18n="timer_start"
+                    style="margin: 40px 0; font-size: 1.6rem;">시작하기</button>
+                <div class="ambient-selector">
+                    <div class="ambient-btn active" onclick="setAmbient('none', this)" data-i18n="ambient_none">침묵</div>
+                    <div class="ambient-btn" onclick="setAmbient('wind', this)" data-i18n="ambient_wind">바람</div>
+                    <div class="ambient-btn" onclick="setAmbient('rain', this)" data-i18n="ambient_rain">빗소리</div>
+                </div>
+            </div>
+            <div id="timer-success" style="display: none; flex-direction: column; align-items: center; width:100%;">
+                <div class="small-label" data-i18n="label_success">비움 완료</div>
+                <div style="font-size: 1.4rem; margin: 40px 0; font-weight: 200;" data-i18n="timer_done">공간이 한결 가벼워졌습니다.
+                </div>
+                <input type="text" id="t-input" class="input-line" data-i18n-placeholder="timer_placeholder"
+                    placeholder="무엇을 비웠나요?">
+                <button class="btn-link" onclick="finishTimerRitual()" style="margin-top:40px;"
+                    data-i18n="save_archive">기록 보관소에 저장</button>
             </div>
         </div>
-        <div id="timer-success" style="display: none; flex-direction: column; align-items: center; width:100%;">
-            <div class="small-label" data-i18n="label_success">비움 완료</div>
-            <div style="font-size: 1.4rem; margin: 40px 0; font-weight: 200;" data-i18n="timer_done">공간이 한결 가벼워졌습니다.
+
+        <div id="screen-pause" class="screen">
+            <div class="back-btn" onclick="goToScreen('home')" data-i18n="nav_close">← 닫기</div>
+            <div id="pause-content" style="width:100%;">
+                <div class="small-label" data-i18n="label_pause">의도적 멈춤</div>
+                <input type="text" id="p-input" class="input-line" data-i18n-placeholder="pause_placeholder"
+                    placeholder="무엇을 사고 싶나요?">
+                <button class="btn-link" onclick="savePurchase()" style="margin-top:50px;" data-i18n="pause_start">24시간
+                    유예하기</button>
             </div>
-            <input type="text" id="t-input" class="input-line" data-i18n-placeholder="timer_placeholder"
-                placeholder="무엇을 비웠나요?">
-            <button class="btn-link" onclick="finishTimerRitual()" style="margin-top:40px;" data-i18n="save_archive">기록
-                보관소에 저장</button>
+            <div id="pause-success" style="display: none; flex-direction: column; align-items: center;">
+                <div style="font-size: 1.4rem; color: var(--text-muted); margin-bottom: 30px; font-weight: 200;"
+                    data-i18n="inner_calm">내면의 고요</div>
+                <div style="font-size: 1rem; color: var(--text-dim); line-height: 2;" data-i18n="pause_done">충동이 가라앉을
+                    때까지<br>24시간의 유예 시간을 가집니다.</div>
+                <button class="btn-link" onclick="goToScreen('home')" style="margin-top: 60px; font-size: 0.9rem;"
+                    data-i18n="back_home">홈으로 돌아가기</button>
+            </div>
         </div>
-    </div>
 
-    <div id="screen-pause" class="screen">
-        <div class="back-btn" onclick="goToScreen('home')" data-i18n="nav_close">← 닫기</div>
-        <div id="pause-content" style="width:100%;">
-            <div class="small-label" data-i18n="label_pause">의도적 멈춤</div>
-            <input type="text" id="p-input" class="input-line" data-i18n-placeholder="pause_placeholder"
-                placeholder="무엇을 사고 싶나요?">
-            <button class="btn-link" onclick="savePurchase()" style="margin-top:50px;" data-i18n="pause_start">24시간
-                유예하기</button>
+        <div id="screen-archive" class="screen">
+            <div class="back-btn" onclick="goToScreen('home')" data-i18n="nav_close">← 닫기</div>
+            <div class="small-label" data-i18n="home_archive">기록 보관소</div>
+            <div id="weight-stat"
+                style="font-size: 0.8rem; color: var(--text-dim); margin-bottom: 40px; font-family: var(--font-sans); letter-spacing: 0.1em;">
+            </div>
+            <div class="archive-list" id="archive-content"></div>
         </div>
-        <div id="pause-success" style="display: none; flex-direction: column; align-items: center;">
-            <div style="font-size: 1.4rem; color: var(--text-muted); margin-bottom: 30px; font-weight: 200;"
-                data-i18n="inner_calm">내면의 고요</div>
-            <div style="font-size: 1rem; color: var(--text-dim); line-height: 2;" data-i18n="pause_done">충동이 가라앉을
-                때까지<br>24시간의 유예 시간을 가집니다.</div>
-            <button class="btn-link" onclick="goToScreen('home')" style="margin-top: 60px; font-size: 0.9rem;"
-                data-i18n="back_home">홈으로 돌아가기</button>
-        </div>
-    </div>
 
-    <div id="screen-archive" class="screen">
-        <div class="back-btn" onclick="goToScreen('home')" data-i18n="nav_close">← 닫기</div>
-        <div class="small-label" data-i18n="home_archive">기록 보관소</div>
-        <div id="weight-stat"
-            style="font-size: 0.8rem; color: var(--text-dim); margin-bottom: 40px; font-family: var(--font-sans); letter-spacing: 0.1em;">
-        </div>
-        <div class="archive-list" id="archive-content"></div>
-    </div>
-
-    <div id="toast">기록되었습니다</div>
-    <div id="deep-fade-overlay"></div>
+        <div id="toast">기록되었습니다</div>
+        <div id="deep-fade-overlay"></div>
     </div>
 
     <script>
@@ -654,10 +651,10 @@
             // Show/Hide theme/lang toggles based on screen
             const themeBtn = document.getElementById('theme-btn');
             const langBtn = document.getElementById('lang-btn');
-            const isSplash = (id === 'splash');
+            const isHome = (id === 'home');
 
-            if (themeBtn) themeBtn.style.display = isSplash ? 'none' : 'block';
-            if (langBtn) langBtn.style.display = isSplash ? 'none' : 'flex';
+            if (themeBtn) themeBtn.style.display = isHome ? 'block' : 'none';
+            if (langBtn) langBtn.style.display = isHome ? 'flex' : 'none';
 
             if (id === 'home') refreshWisdom();
             if (id === 'archive') loadArchive();
@@ -810,22 +807,63 @@
         }
 
         function startAmbient() {
-            stopAmbient(); if (state.timer.ambient === 'none') return;
-            initAudio(); const ctx = state.audio.context;
-            const node = ctx.createBufferSource();
-            const buffer = ctx.createBuffer(1, ctx.sampleRate * 2, ctx.sampleRate);
+            stopAmbient();
+            if (state.timer.ambient === 'none') return;
+            initAudio();
+            const ctx = state.audio.context;
+
+            // Create Noise Buffer
+            const bufferSize = ctx.sampleRate * 2;
+            const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
             const data = buffer.getChannelData(0);
-            for (let i = 0; i < data.length; i++) data[i] = Math.random() * 2 - 1;
-            node.buffer = buffer; node.loop = true;
+            for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+
+            const noise = ctx.createBufferSource();
+            noise.buffer = buffer;
+            noise.loop = true;
+
             const filter = ctx.createBiquadFilter();
-            filter.type = state.timer.ambient === 'wind' ? 'lowpass' : 'highpass';
-            filter.frequency.value = state.timer.ambient === 'wind' ? 400 : 1000;
-            const gain = ctx.createGain(); gain.gain.value = 0.04;
-            node.connect(filter); filter.connect(gain); gain.connect(ctx.destination);
-            node.start(); state.audio.ambientSource = node;
+            const gain = ctx.createGain();
+
+            if (state.timer.ambient === 'wind') {
+                filter.type = 'lowpass';
+                filter.frequency.value = 400;
+                filter.Q.value = 5;
+
+                // LFO for "gusty" breathing effect
+                const lfo = ctx.createOscillator();
+                const lfoGain = ctx.createGain();
+                lfo.frequency.value = 0.15; // Slow cycle
+                lfoGain.gain.value = 250;
+                lfo.connect(lfoGain);
+                lfoGain.connect(filter.frequency);
+                lfo.start();
+                state.audio.lfo = lfo;
+
+                gain.gain.value = 0.08;
+            } else if (state.timer.ambient === 'rain') {
+                filter.type = 'highpass';
+                filter.frequency.value = 1800; // Crisp rain sound
+                gain.gain.value = 0.03;
+            }
+
+            noise.connect(filter);
+            filter.connect(gain);
+            gain.connect(ctx.destination);
+            noise.start();
+            state.audio.ambientSource = noise;
         }
 
-        function stopAmbient() { if (state.audio.ambientSource) { state.audio.ambientSource.stop(); state.audio.ambientSource = null; } }
+        function stopAmbient() {
+            if (state.audio.ambientSource) {
+                state.audio.ambientSource.stop();
+                state.audio.ambientSource = null;
+            }
+            if (state.audio.lfo) {
+                state.audio.lfo.stop();
+                state.audio.lfo = null;
+            }
+        }
 
         window.onload = () => {
             const savedTheme = localStorage.getItem('minimalist_theme');
