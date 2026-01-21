@@ -617,6 +617,35 @@
         function triggerHaptic(duration = 20) {
             if (window.AndroidInterface && window.AndroidInterface.vibrate) window.AndroidInterface.vibrate(duration);
             else if (navigator.vibrate) navigator.vibrate(duration);
+            playClickSound();
+        }
+
+        function playClickSound() {
+            try {
+                if (!state.audio.context) initAudio();
+                const ctx = state.audio.context;
+                if (!ctx) return;
+                if (ctx.state === 'suspended') ctx.resume();
+
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+
+                // Minimalist "Tick" sound
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(300, ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(50, ctx.currentTime + 0.04);
+
+                gain.gain.setValueAtTime(0.05, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.04);
+
+                osc.start(ctx.currentTime);
+                osc.stop(ctx.currentTime + 0.04);
+            } catch (e) {
+                // Ignore audio errors
+            }
         }
 
         function toggleTheme() {
@@ -834,6 +863,7 @@
             if (state.timer.ambient === 'none') return;
             initAudio();
             const ctx = state.audio.context;
+            if (ctx.state === 'suspended') ctx.resume();
 
             // Create Noise Buffer
             const bufferSize = ctx.sampleRate * 2;
@@ -850,7 +880,7 @@
 
             if (state.timer.ambient === 'wind') {
                 filter.type = 'lowpass';
-                filter.frequency.value = 400;
+                filter.frequency.value = 600;
                 filter.Q.value = 5;
 
                 // LFO for "gusty" breathing effect
@@ -863,11 +893,11 @@
                 lfo.start();
                 state.audio.lfo = lfo;
 
-                gain.gain.value = 0.08;
+                gain.gain.value = 0.15;
             } else if (state.timer.ambient === 'rain') {
                 filter.type = 'highpass';
                 filter.frequency.value = 1800; // Crisp rain sound
-                gain.gain.value = 0.03;
+                gain.gain.value = 0.08;
             }
 
             noise.connect(filter);
