@@ -1,7 +1,6 @@
 const CACHE_NAME = 'minimalist-v1';
 const ASSETS_TO_CACHE = [
-    './',
-    './index.html',
+    'index.html',
     './style.css',
     './app.js',
     './manifest.json',
