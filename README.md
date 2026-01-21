@@ -1,4 +1,4 @@
-# 심플하게 산다 (L'Art de la Simplicité)
+# 심플하게 산다 (L'Art de la Simplicité) - 2026_01
 
 > "단순함은 궁극의 정교함이다." — 레오나르도 다 빈치
 
