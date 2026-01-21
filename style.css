@@ -288,15 +288,17 @@ body {
     font-family: var(--font-sans);
     font-size: 0.65rem;
     color: var(--text-muted);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
+    margin-bottom: 8px;
+    opacity: 0.8;
 }
 
 .archive-item .content {
-    font-size: 1.1rem;
+    font-size: 0.95rem;
     color: var(--text-color);
-    margin-top: 10px;
+    margin-top: 6px;
     font-weight: 300;
+    line-height: 1.7;
+    word-break: keep-all;
 }
 
 .delete-btn {
@@ -462,6 +464,34 @@ body.dark-mode::after {
     50% {
         transform: translate(-50%, -60%) scale(1.15);
         border-color: var(--accent-color);
-        box-shadow: 0 0 80px rgba(0, 0, 0, 0.08);
+        background-color: rgba(0, 0, 0, 0.015);
+        box-shadow: 0 0 80px rgba(0, 0, 0, 0.05);
     }
+}
+
+#clutter-layer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    pointer-events: none;
+    overflow: hidden;
+    transition: opacity 2s ease-in-out;
+    opacity: 1;
+}
+
+.clutter-particle {
+    position: absolute;
+    background: var(--text-color);
+    border-radius: 50%;
+    opacity: 0.03;
+    filter: blur(2px);
+    transition: transform 10s ease-in-out;
+}
+
+body.dark-mode .clutter-particle {
+    opacity: 0.06;
+    background: #FFFFFF;
 }
