@@ -1,0 +1,16 @@
+{
+  "name": "심플하게 산다",
+  "short_name": "심플",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#FFFFFF",
+  "theme_color": "#FFFFFF",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/95/95627.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
