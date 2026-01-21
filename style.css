@@ -428,8 +428,33 @@ body.dark-mode::after {
     left: 50%;
     transform: translate(-50%, -50%);
     width: 100%;
+    max-width: 100%;
+    padding: 0 20px;
+    box-sizing: border-box;
     text-align: center;
     margin: 0;
+    font-size: clamp(2rem, 8vw, 3rem);
+    font-weight: 100;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    padding-right: calc(20px + 0.3em);
+    transition: var(--transition);
+    overflow: hidden;
+}
+
+.splash-start {
+    position: absolute;
+    bottom: 80px;
+    font-size: clamp(0.6rem, 2.5vw, 0.7rem);
+    color: var(--text-dim);
+    letter-spacing: 0.2em;
+    padding: 0 20px;
+    padding-right: calc(20px + 0.2em);
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+    overflow: hidden;
 }
 
 #breathing-circle {
